@@ -1,4 +1,4 @@
-	/*
+/*
  * Swipe 2.0
  *
  * Brad Birdsall
@@ -19,7 +19,6 @@ function Swipe(container, options) {
     addEventListener: !!window.addEventListener,
     touch: ('ontouchstart' in window) || window.DocumentTouch && document instanceof DocumentTouch,
     transitions: (function(temp) {
-    
       var props = ['transitionProperty', 'WebkitTransition', 'MozTransition', 'OTransition', 'msTransition'];
       for ( var i in props ) if (temp.style[ props[i] ] !== undefined) return true;
       return false;
@@ -151,6 +150,7 @@ function Swipe(container, options) {
   }
 
   function move(index, dist, speed) {
+
     translate(index, dist, speed);
     slidePos[index] = dist;
 
@@ -242,9 +242,8 @@ function Swipe(container, options) {
       switch (event.type) {
         case 'touchstart': this.start(event); break;
         case 'touchmove': this.move(event); break;
-        case 'touchend': this.end(event); break;    //modify by Alon Zhang
-        // case 'touchend': offloadFn(this.end(event)); break;
-        case 'touchcancel': this.end(event); break;   //add by Alon Zhang
+        // case 'touchend': this.end(event); break;    //modify by Alon Zhang
+        case 'touchend': offloadFn(this.end(event)); break;
         case 'webkitTransitionEnd':
         case 'msTransitionEnd':
         case 'oTransitionEnd':
@@ -257,9 +256,14 @@ function Swipe(container, options) {
 
     },
     start: function(event) {
-    	//	锁住SlidPane，使其不能跟随手指滑动而移动
-    	api.lockSlidPane();
-
+      //adapt APICloud, add by Alon Zhang
+      //lock slidlayout
+      api.lockSlidPane();
+      //lock framegroup
+      api.setFrameGroupAttr({
+          scrollEnabled: false
+      });
+      
       var touches = event.touches[0];
 
       // measure start values
@@ -283,8 +287,6 @@ function Swipe(container, options) {
       // attach touchmove and touchend listeners
       element.addEventListener('touchmove', this, false);
       element.addEventListener('touchend', this, false);
-      //add by Alon Zhang
-      element.addEventListener('touchcancel', this, false);
 
     },
     move: function(event) {
@@ -344,8 +346,14 @@ function Swipe(container, options) {
 
     },
     end: function(event) {
-    //	解锁SlidPane，使其能跟随手指滑动而移动
-		api.unlockSlidPane();
+      //adapt APICloud, add by Alon Zhang
+      //unlock slidlayout
+      api.unlockSlidPane();
+      //unlock framegroup
+      api.setFrameGroupAttr({
+          scrollEnabled: true
+      });
+
       // measure duration
       var duration = +new Date - start.time;
 
@@ -425,8 +433,6 @@ function Swipe(container, options) {
       // kill touchmove and touchend event listeners until touchstart called again
       element.removeEventListener('touchmove', events, false);
       element.removeEventListener('touchend', events, false);
-      //add by Alon Zhang
-      element.removeEventListener('touchcancel', events, false);
 
       //add by Alon Zhang
       //resume slide

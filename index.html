@@ -1,48 +1,57 @@
 <!doctype html>
 <html>
 <head>
-    <meta charset="UTF-8">
+    <meta charset="utf-8">
     <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
-    <title>Hello APP</title>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>index</title>
     <link rel="stylesheet" type="text/css" href="./css/api.css" />
-    <link rel="stylesheet" type="text/css" href="./css/common.css" />
-
-
+    <link rel="stylesheet" type="text/css" href="./css/style.css" />
     <style>
-        /* 头部导航样式 */
-        .header {position: relative;height: 50px;line-height: 50px;background-color: #3993cf;}
-        .header .left  {position: absolute;left: 0;height: 50px;}
-        .header .right {position: absolute;right: 0;height: 50px;}
-        .header .right img {height: 30px;padding: 10px;}
-
-        .swiper-slide img {width: 100%;}
-
-        html,body{height:100%}
-        .spirit{position:absolute;width:50px;height:50px;background-color:red;}
-        #canvas{position:relative;width:100%;height:200px;background-color:#ccc}
-        
+        header{ background-color: #f2f2f2;  line-height: 42px; font-size: 18px; text-align: center; }
     </style>
 </head>
 <body>
-
+    <div id="wrap" class="flex-wrap flex-vertical" >
+        <header class="border-b" >XIXI</header>
+        <div id="main" class="flex-con" >
+                
+        </div>
+        <div id="footer">
+            <h5>Copyright &copy;<span id="year"></span></h5>
+        </div>
+    </div>
 </body>
+</html>
 <script type="text/javascript" src="./script/api.js"></script>
 <script type="text/javascript">
-    apiready = function  () {
-        api.openSlidLayout({
-            type:'left',
-            fixedPane:{
-                name: 'homeFixed',
-                url: './html/homeFixed.html'
-            },
-            slidPane:{
-                name: 'homeSlide',
-                url: './html/homeSlide.html'
-            }
-        }, function(ret) {
-            /* 暂时不需要做任何事. */
-
+    apiready = function(){ // apireday = function() {} // 页面载入  // $api对象 操作DOM， api调用底层方法
+        $api.fixStatusBar( $api.dom('header') ); // 适配IOS7+，Android4.4+状态栏沉浸式效果。
+        // 动态计算header的高度，因iOS7+和Andriod4.4+上支持沉浸式效果，因此header的实际高度可能为css样式中声明的44px加上设备状态栏高度，其中iOS状态栏高度为20px，Andriod为25px
+        var headerH = $api.offset($api.dom('header')).h; // $api.offset().h  获取元素高度
+        // footer高度为css样式中声明的30px
+        var footerH = 30;
+        // frame 的高度为当前window高度减去header和footer的高度
+        var frameH = api.winHeight - headerH - footerH;
+        api.setStatusBarStyle({
+            style: 'dark',
+            color: '#6ab494'
         });
-    }
+        // 打开openFrame框架，参数只有一个，json配置项
+        api.openFrame({
+            name: 'win_home',  // 框架名称
+            url: './html/win_home.html', // 打开url连接地址
+            bounces: true, // 是否可以拖动
+            rect: { // 设置框架的宽高以及横纵坐标
+                x: 0, 
+                y: $api.dom('header').offsetHeight, 
+                w: api.winWidth, 
+                h: $api.dom('#main').offsetHeight
+            }
+        });
+
+        var  year = $api.dom('#year');
+        year.innerHTML = new Date().getFullYear();
+
+    };
 </script>
-</html>
