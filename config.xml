@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <widget id="A6934572432029" version="0.0.1">
-  <name>ting</name>
+  <name>TiNG</name>
 	<description>
 		Example For APICloud.
 	</description>
-	<author email="developer@apicloud.com" href="http://www.apicloud.com">
+	<author email="xingzhanglin@gmail.com" href="http://linxingzhang.com">
 		Developer
 	</author>
 	<content src="index.html" />
